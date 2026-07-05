@@ -1,65 +1,81 @@
-import { useEffect, useState } from "react";
-import api from "../../services/api";
+import { FiBell, FiSearch } from "react-icons/fi";
 
-function Navbar({title = "Dashboard", subtitle = "Welcome back 👋",}) {
+function Navbar({
+    title = "Dashboard",
+    subtitle = "Welcome back 👋",
+}) {
 
-    const [user, setUser] = useState(null);
-
-    useEffect(() => {
-
-        const fetchProfile = async () => {
-
-            try {
-
-                const res = await api.get("/auth/profile");
-
-                setUser(res.data.data);
-
-            } catch (err) {
-
-                console.log(err);
-
-            }
-
-        };
-
-        fetchProfile();
-
-    }, []);
+    const user = JSON.parse(localStorage.getItem("user"));
 
     return (
 
-        <header className="flex h-20 items-center justify-between border-b bg-white px-10">
+        <header className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 bg-white px-6 py-4">
+
+            {/* Left */}
 
             <div>
 
-                <h1 className="text-3xl font-bold">
+                <h1 className="text-3xl font-bold text-slate-800">
                     {title}
                 </h1>
 
-                <p className="text-slate-500">
+                <p className="mt-1 text-sm text-slate-500">
                     {subtitle}
                 </p>
 
             </div>
 
-            <div className="flex items-center gap-4 pr-4">
+            {/* Right */}
 
-                <div className="text-right">
+            <div className="flex flex-wrap items-center gap-4">
 
-                    <p className="text-sm font-semibold">
-                        {user?.name || "Loading..."}
-                    </p>
+                {/* Search */}
 
-                    <p className="text-xs text-slate-500">
-                        {user?.email}
-                    </p>
+                <div className="hidden md:flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-2">
+
+                    <FiSearch className="text-slate-500" />
+
+                    <input
+                        type="text"
+                        placeholder="Search..."
+                        className="bg-transparent outline-none"
+                    />
 
                 </div>
 
-                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-blue-600 text-lg font-bold text-white shadow-md">
+                {/* Notification */}
 
-                    {user?.name?.charAt(0).toUpperCase()}
+                <button className="rounded-full bg-slate-100 p-3 transition hover:bg-slate-200">
+
+                    <FiBell size={20} />
+
+                </button>
+
+                {/* User */}
+
+                <div className="flex items-center gap-3">
+
+                    <div className="text-right">
+
+                        <p className="font-semibold text-slate-800">
+
+                            {user?.name}
+
+                        </p>
+
+                        <p className="text-sm text-slate-500">
+
+                            {user?.email}
+
+                        </p>
+
+                    </div>
+
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 text-lg font-bold text-white shadow">
+
+                        {user?.name?.charAt(0).toUpperCase()}
+
+                    </div>
 
                 </div>
 

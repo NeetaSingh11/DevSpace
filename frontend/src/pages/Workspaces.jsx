@@ -12,6 +12,7 @@ function Workspaces() {
 
     const [workspaces, setWorkspaces] = useState([]);
     const [openModal, setOpenModal] = useState(false);
+    const [editingWorkspace, setEditingWorkspace] = useState(null);
 
     useEffect(() => {
 
@@ -39,17 +40,70 @@ function Workspaces() {
 
         try {
 
-            const res = await api.post(
-                "/workspaces",
-                workspaceData
-            );
+            if (editingWorkspace) {
 
-            setWorkspaces(prev => [
-                ...prev,
-                res.data.data,
-            ]);
+                const res = await api.put(
+                    `/workspaces/${editingWorkspace._id}`,
+                    workspaceData
+                );
+
+                setWorkspaces(prev =>
+                    prev.map(ws =>
+                        ws._id === editingWorkspace._id
+                            ? res.data.data
+                            : ws
+                    )
+                );
+
+                setEditingWorkspace(null);
+
+            } else {
+
+                const res = await api.post(
+                    "/workspaces",
+                    workspaceData
+                );
+
+                setWorkspaces(prev => [
+                    ...prev,
+                    res.data.data,
+                ]);
+
+            }
 
             setOpenModal(false);
+
+        } catch (err) {
+
+            console.log(err);
+
+        }
+
+    };
+
+    const handleEdit = (workspace) => {
+
+        setEditingWorkspace(workspace);
+
+        setOpenModal(true);
+
+    };
+
+    const handleDelete = async (id) => {
+
+        const confirmed = window.confirm(
+            "Delete this workspace?"
+        );
+
+        if (!confirmed) return;
+
+        try {
+
+            await api.delete(`/workspaces/${id}`);
+
+            setWorkspaces(prev =>
+                prev.filter(ws => ws._id !== id)
+            );
 
         } catch (err) {
 
@@ -77,13 +131,15 @@ function Workspaces() {
 
             </div>
 
-            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            <div className="mt-8 grid gap-8 md:grid-cols-2 xl:grid-cols-3">
 
                 {workspaces.map((workspace) => (
 
                     <WorkspaceCard
                         key={workspace._id}
                         workspace={workspace}
+                        onEdit={handleEdit}
+                        onDelete={handleDelete}
                     />
 
                 ))}
@@ -91,7 +147,14 @@ function Workspaces() {
             </div>
             <WorkspaceModal
                 open={openModal}
-                onClose={() => setOpenModal(false)}
+                workspace={editingWorkspace}
+                onClose={() => {
+
+                    setOpenModal(false);
+
+                    setEditingWorkspace(null);
+
+                }}
                 onCreate={createWorkspace}
             />
 

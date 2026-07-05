@@ -1,30 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
-function WorkspaceModal({
-    open,
-    onClose,
-    onCreate,
-    workspace,
-}) {
+function ProjectModal({ open, onClose, onCreate }) {
 
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
-
-    useEffect(() => {
-
-        if (workspace) {
-
-            setName(workspace.name);
-            setDescription(workspace.description);
-
-        } else {
-
-            setName("");
-            setDescription("");
-
-        }
-
-    }, [workspace, open]);
 
     if (!open) return null;
 
@@ -37,20 +16,19 @@ function WorkspaceModal({
             description,
         });
 
+        setName("");
+        setDescription("");
+
     };
 
     return (
 
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
 
-            <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl">
+            <div className="w-full max-w-md rounded-2xl bg-white p-8">
 
                 <h2 className="mb-6 text-2xl font-bold">
-
-                    {workspace
-                        ? "Edit Workspace"
-                        : "Create Workspace"}
-
+                    Create Project
                 </h2>
 
                 <form
@@ -60,7 +38,7 @@ function WorkspaceModal({
 
                     <input
                         type="text"
-                        placeholder="Workspace Name"
+                        placeholder="Project Name"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         className="w-full rounded-lg border p-3"
@@ -90,11 +68,7 @@ function WorkspaceModal({
                             type="submit"
                             className="rounded-lg bg-blue-600 px-5 py-2 text-white"
                         >
-
-                            {workspace
-                                ? "Update"
-                                : "Create"}
-
+                            Create
                         </button>
 
                     </div>
@@ -109,4 +83,4 @@ function WorkspaceModal({
 
 }
 
-export default WorkspaceModal;
+export default ProjectModal;

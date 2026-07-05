@@ -1,47 +1,118 @@
-import { useNavigate } from "react-router-dom";
+import {
+    FiFolder,
+    FiUsers,
+    FiArrowRight,
+    FiEdit2,
+    FiTrash2,
+} from "react-icons/fi";
+import { Link } from "react-router-dom";
 
-function WorkspaceCard({ workspace }) {
-    const navigate = useNavigate();
+function WorkspaceCard({ workspace, onEdit, onDelete, }) {
 
     return (
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg">
+        <div className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
 
-            <div className="flex items-center justify-between">
+            {/* Header */}
 
-                <h2 className="text-2xl font-bold text-slate-800">
-                    📁 {workspace.name}
-                </h2>
+            <div className="flex items-start justify-between">
 
-                <span className="rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-700">
+                <div className="flex items-center gap-3">
+
+                    <div className="rounded-xl bg-blue-100 p-3 text-blue-600">
+
+                        <FiFolder size={26} />
+
+                    </div>
+
+                    <div>
+
+                        <h2 className="text-2xl font-bold text-slate-800">
+
+                            {workspace.name}
+
+                        </h2>
+
+                        <p className="mt-1 text-slate-500">
+
+                            {workspace.description}
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-semibold text-green-600">
+
                     Active
+
                 </span>
 
             </div>
 
-            <p className="mt-4 text-slate-600">
-                {workspace.description}
-            </p>
+            {/* Info */}
 
-            <div className="mt-6 flex items-center justify-between border-t pt-4">
+            <div className="mt-6 flex items-center justify-between border-t border-slate-100 pt-5">
 
-                <span className="text-sm text-slate-500">
-                    👥 {workspace.members.length} Members
-                </span>
+                <div className="flex items-center gap-2 text-slate-500">
 
-                <span className="text-sm font-medium text-slate-500">
+                    <FiUsers />
+
+                    <span>
+
+                        {workspace.members.length} Members
+
+                    </span>
+
+                </div>
+
+                <span className="text-sm text-slate-400">
+
                     Created by You
+
                 </span>
 
             </div>
 
-            <button
-                onClick={() =>
-                    navigate(`/workspaces/${workspace._id}`)
-                }
-                className="mt-6 w-full rounded-xl border border-blue-600 py-3 font-semibold text-blue-600 transition hover:bg-blue-600 hover:text-white">
-                Open Workspace →
-            </button>
+            <div className="mt-6 flex gap-3">
+
+                <button
+                    onClick={() => onEdit(workspace)}
+                    className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-slate-200 py-2 transition hover:bg-slate-100"
+                >
+
+                    <FiEdit2 />
+
+                    Edit
+
+                </button>
+
+                <button
+                    onClick={() => onDelete(workspace._id)}
+                    className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-red-200 py-2 text-red-600 transition hover:bg-red-50"
+                >
+
+                    <FiTrash2 />
+
+                    Delete
+
+                </button>
+
+            </div>
+
+            {/* Footer */}
+
+            <Link
+                to={`/workspaces/${workspace._id}`}
+                className="mt-6 flex items-center justify-center gap-2 rounded-xl bg-blue-600 py-3 font-semibold text-white transition hover:bg-blue-700"
+            >
+
+                Open Workspace
+
+                <FiArrowRight />
+
+            </Link>
 
         </div>
 

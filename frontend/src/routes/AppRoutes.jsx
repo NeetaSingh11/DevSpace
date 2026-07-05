@@ -6,6 +6,7 @@ import Dashboard from "../pages/Dashboard";
 import ProtectedRoute from "./ProtectedRoute";
 import Workspaces from "../pages/Workspaces";
 import WorkspaceDetails from "../pages/WorkspaceDetails";
+import ProjectDetails from "../pages/ProjectDetails";
 
 function AppRoutes() {
     return (
@@ -15,28 +16,36 @@ function AppRoutes() {
                 <Route path="/register" element={<Register />} />
                 <Route
                     path="/dashboard"
-                        element={
-                            <ProtectedRoute>
-                                <Dashboard />
-                            </ProtectedRoute>
-                        }
-                    />
+                    element={
+                        <ProtectedRoute>
+                            <Dashboard />
+                        </ProtectedRoute>
+                    }
+                />
                 <Route
                     path="/workspaces/:workspaceId"
-                        element={
-                            <ProtectedRoute>
-                                <WorkspaceDetails />
-                            </ProtectedRoute>
-                        }
-                    />
+                    element={
+                        <ProtectedRoute>
+                            <WorkspaceDetails />
+                        </ProtectedRoute>
+                    }
+                />
                 <Route
                     path="/workspaces"
-                        element={
-                            <ProtectedRoute>
-                                <Workspaces />
-                            </ProtectedRoute>
-                        }
-                    />
+                    element={
+                        <ProtectedRoute>
+                            <Workspaces />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/workspaces/:workspaceId/projects/:projectId"
+                    element={
+                        <ProtectedRoute>
+                            <ProjectDetails />
+                        </ProtectedRoute>
+                    }
+                />
             </Routes>
         </BrowserRouter>
     );

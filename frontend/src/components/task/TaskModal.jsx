@@ -1,30 +1,33 @@
 import { useState, useEffect } from "react";
 
-function WorkspaceModal({
+function TaskModal({
     open,
     onClose,
     onCreate,
-    workspace,
+    task,
 }) {
 
-    const [name, setName] = useState("");
+    const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
+    const [priority, setPriority] = useState("Medium");
 
     useEffect(() => {
 
-        if (workspace) {
+        if (task) {
 
-            setName(workspace.name);
-            setDescription(workspace.description);
+            setTitle(task.title);
+            setDescription(task.description);
+            setPriority(task.priority);
 
         } else {
 
-            setName("");
+            setTitle("");
             setDescription("");
+            setPriority("Medium");
 
         }
 
-    }, [workspace, open]);
+    }, [task, open]);
 
     if (!open) return null;
 
@@ -33,8 +36,9 @@ function WorkspaceModal({
         e.preventDefault();
 
         onCreate({
-            name,
+            title,
             description,
+            priority,
         });
 
     };
@@ -43,13 +47,11 @@ function WorkspaceModal({
 
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
 
-            <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl">
+            <div className="w-full max-w-lg rounded-2xl bg-white p-8 shadow-xl">
 
                 <h2 className="mb-6 text-2xl font-bold">
 
-                    {workspace
-                        ? "Edit Workspace"
-                        : "Create Workspace"}
+                    {task ? "Edit Task" : "Create Task"}
 
                 </h2>
 
@@ -60,9 +62,9 @@ function WorkspaceModal({
 
                     <input
                         type="text"
-                        placeholder="Workspace Name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
+                        placeholder="Task Title"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
                         className="w-full rounded-lg border p-3"
                         required
                     />
@@ -73,8 +75,19 @@ function WorkspaceModal({
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                         className="w-full rounded-lg border p-3"
-                        required
                     />
+
+                    <select
+                        value={priority}
+                        onChange={(e) => setPriority(e.target.value)}
+                        className="w-full rounded-lg border p-3"
+                    >
+
+                        <option>Low</option>
+                        <option>Medium</option>
+                        <option>High</option>
+
+                    </select>
 
                     <div className="flex justify-end gap-3">
 
@@ -91,9 +104,7 @@ function WorkspaceModal({
                             className="rounded-lg bg-blue-600 px-5 py-2 text-white"
                         >
 
-                            {workspace
-                                ? "Update"
-                                : "Create"}
+                            {task ? "Update" : "Create"}
 
                         </button>
 
@@ -109,4 +120,4 @@ function WorkspaceModal({
 
 }
 
-export default WorkspaceModal;
+export default TaskModal;
