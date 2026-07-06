@@ -6,6 +6,8 @@ import DashboardLayout from "../layouts/DashboardLayout";
 import ProjectCard from "../components/project/ProjectCard";
 import ProjectModal from "../components/project/ProjectModal";
 import MembersPanel from "../components/workspace/MembersPanel";
+import InviteModal from "../components/workspace/InviteModal";
+import toast from "react-hot-toast";
 
 function WorkspaceDetails() {
 
@@ -13,6 +15,7 @@ function WorkspaceDetails() {
     const [workspace, setWorkspace] = useState(null);
     const [projects, setProjects] = useState([]);
     const [openProjectModal, setOpenProjectModal] = useState(false);
+    const [openInviteModal,setOpenInviteModal]= useState(false);
 
     useEffect(() => {
 
@@ -72,11 +75,16 @@ function WorkspaceDetails() {
                 res.data.data,
             ]);
 
+            toast.success("Project created successfully!");
+
             setOpenProjectModal(false);
 
         } catch (err) {
 
-            console.log(err);
+            toast.error(
+                err.response?.data?.message ||
+                "Failed to create project"
+            );
 
         }
 
@@ -137,14 +145,37 @@ function WorkspaceDetails() {
 
             <div className="mt-6 grid gap-8 md:grid-cols-2 xl:grid-cols-3">
 
-                {projects.map((project) => (
+                {projects.length === 0 ? (
 
-                    <ProjectCard
-                        key={project._id}
-                        project={project}
-                    />
+                        <div className="col-span-full rounded-2xl bg-white p-10 text-center shadow">
 
-                ))}
+                            <h2 className="text-2xl font-bold">
+
+                                No Projects Yet
+
+                            </h2>
+
+                            <p className="mt-2 text-slate-500">
+
+                                Create your first project.
+
+                            </p>
+
+                        </div>
+
+                    ) : (
+
+                        projects.map((project) => (
+
+                            <ProjectCard
+                                key={project._id}
+                                project={project}
+                            />
+
+                        ))
+
+                    )
+                }
 
             </div>
 
@@ -154,9 +185,23 @@ function WorkspaceDetails() {
                 onCreate={createProject}
             />
 
+            <InviteModal
+
+                open={openInviteModal}
+                onClose={()=>
+                    setOpenInviteModal(false)
+                }
+                workspaceId={workspaceId}
+
+            />
+
             <MembersPanel
+
                 workspace={workspace}
-                onInvite={() => {}}
+                onInvite={()=>
+                    setOpenInviteModal(true)
+                }
+
             />
 
         </DashboardLayout>

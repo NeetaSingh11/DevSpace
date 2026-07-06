@@ -7,6 +7,7 @@ import DashboardLayout from "../layouts/DashboardLayout";
 import TaskCard from "../components/task/TaskCard";
 import TaskModal from "../components/task/TaskModal";
 import KanbanBoard from "../components/kanban/KanbanBoard";
+import toast from "react-hot-toast";
 
 function ProjectDetails() {
 
@@ -16,6 +17,13 @@ function ProjectDetails() {
     const [openTaskModal, setOpenTaskModal] = useState(false);
     const [view, setView] = useState("list");
     const [editingTask, setEditingTask] = useState(null);
+    const [statusFilter, setStatusFilter] = useState("All");
+    const filteredTasks =
+    statusFilter === "All"
+        ? tasks
+        : tasks.filter(
+            task => task.status === statusFilter
+        );
 
     useEffect(() => {
 
@@ -60,6 +68,12 @@ function ProjectDetails() {
                     )
                 );
 
+                toast.success(
+                    editingTask
+                        ? "Task updated successfully!"
+                        : "Task created successfully!"
+                );
+
                 setEditingTask(null);
 
             } else {
@@ -80,7 +94,10 @@ function ProjectDetails() {
 
         } catch (err) {
 
-            console.log(err);
+            toast.error(
+                err.response?.data?.message ||
+                "Failed to save task"
+            );
 
         }
 
@@ -108,13 +125,69 @@ function ProjectDetails() {
                 `/workspaces/${workspaceId}/projects/${projectId}/tasks/${taskId}`
             );
 
+            toast.success("Task deleted successfully!");
+
             setTasks(prev =>
                 prev.filter(task => task._id !== taskId)
             );
 
         } catch (err) {
 
-            console.log(err);
+            toast.error(
+                "Failed to delete task"
+            );
+
+        }
+
+    };
+
+    const handleStatusChange = async (taskId, currentStatus) => {
+
+        const nextStatus = {
+
+            "Todo": "In Progress",
+            "In Progress": "Review",
+            "Review": "Done",
+            "Done": "Done",
+
+        };
+
+        if (currentStatus === "Done") return;
+
+        try {
+
+            await api.patch(
+
+                `/workspaces/${workspaceId}/projects/${projectId}/tasks/${taskId}/status`,
+
+                {
+                    status: nextStatus[currentStatus],
+                }
+
+            );
+
+            setTasks(prev =>
+
+                prev.map(task =>
+
+                    task._id === taskId
+                        ? {
+                            ...task,
+                            status: nextStatus[currentStatus],
+                        }
+                        : task
+
+                )
+
+            );
+
+            toast.success("Status updated");
+
+        }
+
+        catch (err) {
+
+            toast.error("Failed to update status");
 
         }
 
@@ -130,15 +203,27 @@ function ProjectDetails() {
 
                     <div className="flex items-center gap-4">
 
-                        <h2 className="text-3xl font-bold">
-                            Tasks
-                        </h2>
+                        <div>
 
-                        <div className="flex rounded-xl border bg-white p-1">
+                            <h2 className="text-3xl font-bold">
+
+                                Project Tasks
+
+                            </h2>
+
+                            <p className="text-slate-500">
+
+                                Switch between List and Kanban Board view.
+
+                            </p>
+
+                        </div>
+
+                        <div className="flex rounded-xl border border-slate-300 bg-white p-1 shadow-sm">
 
                             <button
                                 onClick={() => setView("list")}
-                                className={`rounded-lg px-4 py-2 ${
+                                className={`rounded-lg px-5 py-2 font-medium transition ${
                                     view === "list"
                                         ? "bg-blue-600 text-white"
                                         : ""
@@ -171,26 +256,70 @@ function ProjectDetails() {
 
                 </div>
 
+                <div className="mt-6">
+
+                    <select
+                        value={statusFilter}
+                        onChange={(e)=>setStatusFilter(e.target.value)}
+                        className="rounded-lg border p-3"
+                    >
+
+                        <option>All</option>
+                        <option>Todo</option>
+                        <option>In Progress</option>
+                        <option>Review</option>
+                        <option>Done</option>
+
+                    </select>
+
+                </div>
+
             {view === "list" ? (
 
                 <div className="mt-8 grid gap-8 md:grid-cols-2 xl:grid-cols-3">
 
-                    {tasks.map(task => (
-                        <TaskCard
-                            key={task._id}
-                            task={task}
-                            onEdit={handleEdit}
-                            onDelete={handleDelete}
-                        />
-                    ))}
+                    {filteredTasks.length === 0 ? (
+
+                        <div className="col-span-full rounded-2xl bg-white p-10 text-center shadow">
+
+                            <h2 className="text-2xl font-bold">
+                                {statusFilter === "All"
+                                    ? "No Tasks Yet"
+                                    : `No ${statusFilter} Tasks`}
+                            </h2>
+
+                            <p className="mt-2 text-slate-500">
+
+                                Create your first task to get started.
+
+                            </p>
+
+                        </div>
+
+                    ) : (
+
+                        filteredTasks.map(task => (
+
+                            <TaskCard
+                                key={task._id}
+                                task={task}
+                                onEdit={handleEdit}
+                                onDelete={handleDelete}
+                            />
+
+                        ))
+
+                    )
+                }
 
                 </div>
 
             ) : (
 
-                <div className="mt-8 rounded-xl bg-white p-8 text-center">
-                    Board Coming Soon...
-                </div>
+                <KanbanBoard
+                    tasks={tasks}
+                    onMove={handleStatusChange}
+                />
 
             )}
 

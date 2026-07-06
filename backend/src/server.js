@@ -11,6 +11,7 @@ const startServer = async () => {
         // Connect Database
         await connectDB();
 
+        app.use("/uploads", require("express").static("src/uploads"));
         // Start Server
         app.listen(PORT, () => {
             console.log("=================================");

@@ -17,6 +17,20 @@ function TaskCard({ task, onEdit, onDelete, }) {
         High: "bg-red-100 text-red-700",
 
     };
+    
+    <p className="text-sm text-slate-500">
+
+    📅 {
+
+    task.dueDate
+
+    ? new Date(task.dueDate).toLocaleDateString()
+
+    : "No Due Date"
+
+    }
+
+    </p>
 
     const statusColor = {
 
@@ -37,6 +51,24 @@ function TaskCard({ task, onEdit, onDelete, }) {
             <div className="flex items-start justify-between">
 
                 <h3 className="text-xl font-bold text-slate-800">
+
+                    {
+
+                        task.dueDate &&
+
+                        new Date(task.dueDate) < new Date() &&
+
+                        task.status !== "Done" && (
+
+                        <span className="rounded bg-red-100 px-2 py-1 text-xs font-semibold text-red-600">
+
+                        Overdue
+
+                        </span>
+
+                        )
+
+                    }
 
                     {task.title}
 
@@ -59,6 +91,45 @@ function TaskCard({ task, onEdit, onDelete, }) {
                 {task.description}
 
             </p>
+
+            {task.attachments?.length > 0 && (
+
+        <div className="mt-4">
+
+            <p className="mb-2 font-semibold">
+
+                Attachments
+
+            </p>
+
+            { task.attachments.map((file, index) => (
+
+                                <a
+
+                                    key={index}
+
+                                    href={`http://localhost:5000${file.fileUrl}`}
+
+                                    target="_blank"
+
+                                    rel="noreferrer"
+
+                                    className="block text-blue-600 hover:underline"
+
+                                >
+
+                                    📎 {file.fileName}
+
+                                </a>
+
+                            ))
+
+                        }
+
+                    </div>
+
+                )
+            }
 
             <div className="mt-6 flex items-center justify-between">
 

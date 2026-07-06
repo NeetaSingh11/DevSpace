@@ -5,9 +5,10 @@ import {
     FiEdit2,
     FiTrash2,
 } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function WorkspaceCard({ workspace, onEdit, onDelete, }) {
+    const navigate = useNavigate();
 
     return (
 
@@ -103,16 +104,26 @@ function WorkspaceCard({ workspace, onEdit, onDelete, }) {
 
             {/* Footer */}
 
-            <Link
-                to={`/workspaces/${workspace._id}`}
-                className="mt-6 flex items-center justify-center gap-2 rounded-xl bg-blue-600 py-3 font-semibold text-white transition hover:bg-blue-700"
+            <button
+                onClick={() => {
+
+                    // alert("Button Clicked");
+
+                    localStorage.setItem(
+                        "workspaceId",
+                        workspace._id
+                    );
+
+                    console.log("Saved:", workspace._id);
+
+                    navigate(`/workspaces/${workspace._id}`);
+
+                }}
+                className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 py-3 font-semibold text-white transition hover:bg-blue-700"
             >
-
                 Open Workspace
-
                 <FiArrowRight />
-
-            </Link>
+            </button>
 
         </div>
 

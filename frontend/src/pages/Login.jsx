@@ -39,6 +39,11 @@ function Login() {
 
             localStorage.setItem("token", res.data.data.token);
 
+            localStorage.setItem(
+                "user",
+                JSON.stringify(res.data.data.user)
+            );
+
             toast.success("Welcome back 👋");
 
             navigate("/dashboard");

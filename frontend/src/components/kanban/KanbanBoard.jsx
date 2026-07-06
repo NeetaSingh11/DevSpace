@@ -1,44 +1,45 @@
 import KanbanColumn from "./KanbanColumn";
 
-function KanbanBoard({ tasks }) {
+function KanbanBoard({ tasks, onMove, }) {
 
-    const todo = tasks.filter(t => t.status === "Todo");
+    const columns = {
 
-    const progress = tasks.filter(
-        t => t.status === "In Progress"
-    );
+        Todo: tasks.filter(
+            task => task.status === "Todo"
+        ),
 
-    const review = tasks.filter(
-        t => t.status === "Review"
-    );
+        "In Progress": tasks.filter(
+            task => task.status === "In Progress"
+        ),
 
-    const done = tasks.filter(
-        t => t.status === "Done"
-    );
+        Review: tasks.filter(
+            task => task.status === "Review"
+        ),
+
+        Done: tasks.filter(
+            task => task.status === "Done"
+        ),
+
+    };
 
     return (
 
-        <div className="grid gap-6 xl:grid-cols-4">
+        <div className="grid gap-6 lg:grid-cols-2 xl:grid-cols-4">
 
-            <KanbanColumn
-                title="Todo"
-                tasks={todo}
-            />
+            {Object.entries(columns).map(
 
-            <KanbanColumn
-                title="In Progress"
-                tasks={progress}
-            />
+                ([title, tasks]) => (
 
-            <KanbanColumn
-                title="Review"
-                tasks={review}
-            />
+                    <KanbanColumn
+                        key={title}
+                        title={title}
+                        tasks={tasks}
+                        onMove={onMove}
+                    />
 
-            <KanbanColumn
-                title="Done"
-                tasks={done}
-            />
+                )
+
+            )}
 
         </div>
 

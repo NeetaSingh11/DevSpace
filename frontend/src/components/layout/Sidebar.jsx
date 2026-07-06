@@ -5,6 +5,7 @@ import {
     FiFolder,
     FiActivity,
     FiLogOut,
+    FiBell
 } from "react-icons/fi";
 
 function Sidebar() {
@@ -14,6 +15,7 @@ function Sidebar() {
     const logout = () => {
 
         localStorage.removeItem("token");
+        localStorage.removeItem("user");
 
         navigate("/");
 
@@ -95,21 +97,39 @@ function Sidebar() {
 
                     </NavLink>
 
-                    <div className="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-500">
+                    <NavLink
+                        to="/invitations"
+                        className={({ isActive }) =>
+                            `flex items-center gap-3 rounded-xl px-4 py-3 transition ${
+                                isActive
+                                    ? "bg-blue-600 text-white shadow"
+                                    : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                            }`
+                        }
+                    >
+
+                        <FiBell size={20} />
+
+                        Invitations
+
+                    </NavLink>
+
+                    <NavLink
+                        to="/activity"
+                        className={({ isActive }) =>
+                            `flex items-center gap-3 rounded-xl px-4 py-3 transition ${
+                                isActive
+                                    ? "bg-blue-600 text-white shadow"
+                                    : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                            }`
+                        }
+                    >
 
                         <FiActivity size={20} />
 
-                        <span>
-                            Activity
-                        </span>
+                        Activity
 
-                        <span className="ml-auto rounded-full bg-slate-700 px-2 py-1 text-[10px]">
-
-                            Soon
-
-                        </span>
-
-                    </div>
+                    </NavLink>
 
                 </div>
 

@@ -1,62 +1,45 @@
 const authService = require("../services/authService");
+const asyncHandler = require("../utils/asyncHandler");
 
 class AuthController {
-    async register(req, res) {
-        try {
-            const user = await authService.register(req.body);
 
-            return res.status(201).json({
-                success: true,
-                message: "User registered successfully",
-                data: user,
-            });
-        } catch (error) {
-            return res.status(400).json({
-                success: false,
-                message: error.message,
-            });
-        }
-    }
+    register = asyncHandler(async (req, res) => {
 
-    async login(req, res) {
-        try {
+        const user = await authService.register(req.body);
 
-            const { email, password } = req.body;
+        res.status(201).json({
+            success: true,
+            message: "User registered successfully",
+            data: user,
+        });
 
-            const data = await authService.login(email, password);
+    });
 
-            return res.status(200).json({
-                success: true,
-                message: "Login successful",
-                data,
-            });
+    login = asyncHandler(async (req, res) => {
 
-        } catch (error) {
+        const { email, password } = req.body;
 
-            return res.status(400).json({
-                success: false,
-                message: error.message,
-            });
+        const data = await authService.login(email, password);
 
-        }
-    }
+        res.status(200).json({
+            success: true,
+            message: "Login successful",
+            data,
+        });
 
-    async profile(req, res) {
-        try {
+    });
 
-            const profile = await authService.getProfile(req.user._id);
+    profile = asyncHandler(async (req, res) => {
 
-            return res.status(200).json({
-                success: true,
-                data: profile,
-            });
-        } catch (error) {
-            return res.status(400).json({
-                success: false,
-                message: error.message,
-            });
-        }
-    }
+        const profile = await authService.getProfile(req.user._id);
+
+        res.status(200).json({
+            success: true,
+            data: profile,
+        });
+
+    });
+
 }
 
 module.exports = new AuthController();

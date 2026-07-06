@@ -1,24 +1,26 @@
 const User = require("../models/User");
+const BaseRepository = require("./BaseRepository");
 
-class UserRepository {
-    async createUser(userData) {
-        return await User.create(userData);
+class UserRepository extends BaseRepository {
+
+    constructor() {
+        super(User);
     }
 
     async findByEmail(email) {
-        return await User.findOne({ email });
+        return this.findOne({ email });
     }
 
     async findByEmailWithPassword(email) {
-        return await User.findOne({ email });
-    }
-    async findByUsername(username) {
-        return await User.findOne({ username });
+        return await this.model
+            .findOne({ email })
+            .select("+password");
     }
 
-    async findById(id) {
-        return await User.findById(id);
+    async findByUsername(username) {
+        return this.findOne({ username });
     }
+
 }
 
 module.exports = new UserRepository();

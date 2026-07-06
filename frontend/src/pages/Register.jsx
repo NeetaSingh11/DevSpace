@@ -43,7 +43,7 @@ function Register() {
                 form
             );
 
-            toast.success(res.data.message);
+            toast.success("Account created successfully!");
 
             navigate("/");
 

@@ -7,6 +7,8 @@ import ProtectedRoute from "./ProtectedRoute";
 import Workspaces from "../pages/Workspaces";
 import WorkspaceDetails from "../pages/WorkspaceDetails";
 import ProjectDetails from "../pages/ProjectDetails";
+import Invitations from "../pages/Invitations";
+import Activity from "../pages/Activity";
 
 function AppRoutes() {
     return (
@@ -43,6 +45,22 @@ function AppRoutes() {
                     element={
                         <ProtectedRoute>
                             <ProjectDetails />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/invitations"
+                    element={
+                        <ProtectedRoute>
+                            <Invitations />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/activity"
+                    element={
+                        <ProtectedRoute>
+                            <Activity />
                         </ProtectedRoute>
                     }
                 />
