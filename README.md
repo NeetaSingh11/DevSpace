@@ -126,8 +126,6 @@ Coming Soon
 
 GitHub: https://github.com/NeetaSingh11
 
-LinkedIn: *(Add your LinkedIn URL here)*
-
 ---
 
 ## ⭐ If you like this project, consider giving it a star!
